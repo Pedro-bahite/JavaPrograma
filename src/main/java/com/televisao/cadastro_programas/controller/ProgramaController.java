@@ -32,4 +32,9 @@ public class ProgramaController {
     }
 
     @PutMapping
+    public ResponseEntity<Void> atualizarProgramaPorId(@RequestParam Integer id,
+                                                       @RequestBody Programa programa){
+        programaService.atualizarProgramaPorId(id, programa);
+        return ResponseEntity.ok().build();
+    }
 }
