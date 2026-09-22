@@ -4,6 +4,8 @@ import com.televisao.cadastro_programas.infrastructure.entitys.Programa;
 import com.televisao.cadastro_programas.infrastructure.repository.ProgramaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProgramaService {
 
@@ -18,7 +20,7 @@ public class ProgramaService {
     }
 
     public Programa buscarProgramaPorNome(String nome){
-        return repository.findByNome(nome).orElseThrow(
+        return repository.findByNomeContainingIgnoreCase(nome).orElseThrow(
                 () -> new RuntimeException("Nome não encontrado!!")
         );
 
@@ -41,5 +43,15 @@ public class ProgramaService {
 
         repository.saveAndFlush(programaAtualizado);
 
+    }
+
+    public List<Programa> buscarTodosProgramas() {
+        return repository.findAll();
+    }
+
+
+    public Programa buscarProgramaPorId(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Programa não encontrado com o ID: " + id));
     }
 }

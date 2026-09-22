@@ -1,0 +1,162 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 30px 20px;
+    background-color: #0f0f1a;
+    background-image: radial-gradient(circle, #1a1a3a 0%, #080811 100%);
+    color: #e0e0ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: #00f3ff;
+    text-align: center;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.6), 0 0 20px rgba(0, 243, 255, 0.3);
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 15px;
+    color: #ff007f;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 500px;
+}
+
+h2::before {
+    content: "📺";
+    font-size: 1.1rem;
+}
+
+input, select, button {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 8px 0;
+    padding: 12px 15px;
+    font-size: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+
+input, select {
+    background-color: #181828;
+    color: #ffffff;
+    border: 1px solid #333355;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: #00f3ff;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    background-color: #1e1e35;
+}
+
+
+select option {
+    background-color: #181828;
+    color: #ffffff;
+}
+
+
+button {
+    background: linear-gradient(135deg, #ff007f, #7928ca);
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff2a9d, #9333ea);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 0, 127, 0.5);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+
+button:disabled {
+    background: #252538 !important;
+    color: #555577 !important;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+table {
+    width: 100%;
+    max-width: 500px;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: #181828;
+    border: 1px solid #333355;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #282845;
+}
+
+th {
+    background-color: #202038;
+    color: #00f3ff;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    color: #e0e0ff;
+    font-size: 14px;
+}
+
+tr:hover {
+    background-color: #22223d;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    width: 100%;
+    max-width: 500px;
+    background: linear-gradient(90deg, transparent, #ff007f, #00f3ff, transparent);
+    margin: 25px 0;
+}
+
+
+pre {
+    width: 100%;
+    max-width: 500px;
+    background-color: #05050a;
+    color: #00ff66;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    overflow-x: auto;
+    box-sizing: border-box;
+    box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.15);
+}

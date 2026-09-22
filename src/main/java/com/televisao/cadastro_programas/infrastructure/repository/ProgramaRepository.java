@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ProgramaRepository extends JpaRepository<Programa, Integer> {
 
-    Optional<Programa> findByNome(String nome);
+    Optional<Programa> findByNomeContainingIgnoreCase(String nome);
 
     @Transactional
     void deleteByNome(String nome);

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Programas de TV</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Cadastro de Programas de TV</h1>
+
+
+<h2>Programas Cadastrados</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Emissora</th>
+        <th>Classificação</th>
+    </tr>
+    </thead>
+    <tbody id="tabelaCorpo">
+
+    </tbody>
+</table>
+
+<hr>
+
+
+<h2>Criar Programa</h2>
+<input type="text" id="nome" placeholder="Nome do Programa" class="form-criar">
+<select id="categoria" class="form-criar">
+    <option value="" disabled selected>Selecione a Categoria</option>
+    <option value="Desenho">Desenho</option>
+    <option value="Seriado">Seriado</option>
+    <option value="Filme">Filme</option>
+    <option value="Programa de Auditório">Programa de Auditório</option>
+    <option value="Jornal">Jornal</option>
+    <option value="Novela">Novela</option>
+    <option value="Esporte">Esporte</option>
+    <option value="Reality Show">Reality Show</option>
+</select>
+<input type="text" id="emissora" placeholder="Emissora" class="form-criar">
+<select id="class_indic" class="form-criar">
+    <option value="" disabled selected>Selecione a Classificação</option>
+    <option value="Livre">Livre para todas idades</option>
+    <option value="10 anos">+10 anos</option>
+    <option value="12 anos">+12 anos</option>
+    <option value="14 anos">+14 anos</option>
+    <option value="16 anos">+16 anos</option>
+    <option value="18 anos">+18 anos</option>
+</select>
+<button id="btnCriar" onclick="criar()" disabled>Salvar</button>
+
+<hr>
+
+<!-- Buscar Programa -->
+<h2>Buscar Programa</h2>
+<input type="text" id="buscarNome" placeholder="Nome do Programa" class="form-buscar">
+<button id="btnBuscar" onclick="buscar()" disabled>Buscar</button>
+<pre id="resultadoBuscar"></pre>
+
+<hr>
+
+<!-- Deletar Programa -->
+<h2>Deletar Programa</h2>
+<input type="text" id="deletarNome" placeholder="Nome do Programa" class="form-deletar">
+<button id="btnDeletar" onclick="deletar()" disabled>Deletar</button>
+
+<hr>
+
+<!-- Atualizar Programa -->
+<h2>Atualizar Programa</h2>
+<input type="number" id="id" placeholder="ID do Programa" class="form-atualizar">
+<input type="text" id="novoNome" placeholder="Novo Nome" class="form-atualizar">
+<select id="novaCategoria" class="form-atualizar">
+    <option value="" disabled selected>Selecione a Nova Categoria</option>
+    <option value="Desenho">Desenho</option>
+    <option value="Seriado">Seriado</option>
+    <option value="Filme">Filme</option>
+    <option value="Programa de Auditório">Programa de Auditório</option>
+    <option value="Jornal">Jornal</option>
+    <option value="Novela">Novela</option>
+    <option value="Esporte">Esporte</option>
+    <option value="Reality Show">Reality Show</option>
+</select>
+<input type="text" id="novaEmissora" placeholder="Nova Emissora" class="form-atualizar">
+<select id="novaClassIndic" class="form-atualizar">
+    <option value="" disabled selected>Selecione a Nova Classificação</option>
+    <option value="Livre para todas as idades">Livre</option>
+    <option value="+10 anos">10 anos</option>
+    <option value="+12 anos">12 anos</option>
+    <option value="+14 anos">14 anos</option>
+    <option value="+16 anos">16 anos</option>
+    <option value="+18 anos">18 anos</option>
+</select>
+<button id="btnAtualizar" onclick="atualizar()" disabled>Atualizar</button>
+
+<script>
+    const api = "/programa";
+
+
+    function configurarValidacao(classeInputs, idBotao) {
+        const inputs = document.querySelectorAll(`.${classeInputs}`);
+        const botao = document.getElementById(idBotao);
+
+        function checarCampos() {
+            const todosPreenchidos = Array.from(inputs).every(input => input.value.trim() !== "");
+            botao.disabled = !todosPreenchidos;
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener("input", checarCampos);
+            input.addEventListener("change", checarCampos);
+        });
+    }
+
+    configurarValidacao("form-criar", "btnCriar");
+    configurarValidacao("form-buscar", "btnBuscar");
+    configurarValidacao("form-deletar", "btnDeletar");
+    configurarValidacao("form-atualizar", "btnAtualizar");
+    // --- AUTOPREENCHIMENTO AO DIGITAR O ID PARA ATUALIZAR ---
+    document.getElementById("id").addEventListener("blur", async function() {
+        const idBuscado = this.value;
+        if (!idBuscado) return; // Se estiver vazio, não faz nada
+
+        try {
+            // Busca o programa específico pelo ID (ex: /programa/1)
+            const resp = await fetch(`${api}/${idBuscado}`);
+
+            if (resp.ok) {
+                const programa = await resp.json();
+
+                // Preenche os campos com os dados vindos do banco
+                document.getElementById("novoNome").value = programa.nome;
+                document.getElementById("novaCategoria").value = programa.categoria;
+                document.getElementById("novaEmissora").value = programa.emissora;
+                document.getElementById("novaClass_indic").value = programa.class_indic;
+
+                // Avisa o sistema de validação que os campos foram preenchidos para liberar o botão
+                document.getElementById("novoNome").dispatchEvent(new Event('input'));
+                document.getElementById("novaCategoria").dispatchEvent(new Event('input'));
+                document.getElementById("novaEmissora").dispatchEvent(new Event('input'));
+                document.getElementById("novaClass_indic").dispatchEvent(new Event('input'));
+
+            } else {
+                alert("Programa com ID " + idBuscado + " não encontrado no banco de dados.");
+                // Limpa os campos se não achar
+                document.getElementById("novoNome").value = "";
+                document.getElementById("novaCategoria").value = "";
+                document.getElementById("novaEmissora").value = "";
+                document.getElementById("novaClass_indic").value = "";
+            }
+        } catch (e) {
+            console.error("Erro ao buscar programa por ID:", e);
+        }
+    });
+
+    async function listarTodos() {
+        try {
+            const resp = await fetch(api);
+            if (resp.ok) {
+                const programas = await resp.json();
+                const tbody = document.getElementById("tabelaCorpo");
+                tbody.innerHTML = "";
+
+                programas.forEach(p => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+              <td>${p.id}</td>
+              <td>${p.nome}</td>
+              <td>${p.categoria}</td>
+              <td>${p.emissora}</td>
+              <td>${p.class_indic}</td>
+            `;
+                    tbody.appendChild(tr);
+                });
+            }
+        } catch (e) {
+            console.error("Erro ao carregar lista de programas:", e);
+        }
+    }
+
+    // --- AÇÕES DA API ---
+    async function criar() {
+        const resp = await fetch(api, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nome: document.getElementById("nome").value,
+                categoria: document.getElementById("categoria").value,
+                emissora: document.getElementById("emissora").value,
+                class_indic: document.getElementById("class_indic").value
+            })
+        });
+        if (resp.ok) {
+            alert("Programa criado com sucesso!");
+            listarTodos();
+        } else {
+            alert("Erro ao criar programa!");
+        }
+    }
+
+    async function buscar() {
+        const nome = document.getElementById("buscarNome").value;
+        const resp = await fetch(`${api}?nome=${encodeURIComponent(nome)}`);
+        if (resp.ok) {
+            const data = await resp.json();
+            document.getElementById("resultadoBuscar").innerText = JSON.stringify(data, null, 2);
+        } else {
+            document.getElementById("resultadoBuscar").innerText = "Programa não encontrado!";
+        }
+    }
+
+    async function deletar() {
+        const nome = document.getElementById("deletarNome").value;
+        const resp = await fetch(`${api}?nome=${encodeURIComponent(nome)}`, { method: "DELETE" });
+        if (resp.ok) {
+            alert("Programa deletado com sucesso!");
+            listarTodos();
+        } else {
+            alert("Erro ao deletar programa!");
+        }
+    }
+
+    async function atualizar() {
+        const id = document.getElementById("id").value;
+        const resp = await fetch(`${api}?id=${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nome: document.getElementById("novoNome").value,
+                categoria: document.getElementById("novaCategoria").value,
+                emissora: document.getElementById("novaEmissora").value,
+                class_indic: document.getElementById("novaClass_indic").value
+            })
+        });
+        if (resp.ok) {
+            alert("Programa atualizado com sucesso!");
+            listarTodos();
+        } else {
+            alert("Erro ao atualizar programa!");
+        }
+    }
+    listarTodos();
+</script>
+</body>
+</html>
