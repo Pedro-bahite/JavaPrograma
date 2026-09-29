@@ -7,6 +7,9 @@
 </head>
 <body>
 
+<div id="toast-container"></div>
+
+
 <h1>Gerenciador de Programas de TV</h1>
 
 <div class="dashboard-container">
@@ -106,6 +109,18 @@
 <script>
     const api = "/programa";
 
+    function mostrarToast(mensagem, tipo = 'sucesso') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+
+        toast.className = `toast toast-${tipo}`;
+        toast.innerText = mensagem;
+
+        container.appendChild(toast);
+
+        setTimeout(() => toast.remove(), 3000);
+    }
+
     function configurarValidacao(classeInputs, idBotao) {
         const inputs = document.querySelectorAll(`.${classeInputs}`);
         const botao = document.getElementById(idBotao);
@@ -133,10 +148,14 @@
         document.getElementById("btnCriar").disabled = true;
         document.getElementById("btnAtualizar").disabled = true;
         document.getElementById("btnDeletar").disabled = true;
+
+        document.querySelectorAll('.linha-selecionada').forEach(linha => linha.classList.remove('linha-selecionada'));
     }
 
-    function carregarDadosParaEdicao(programa) {
+    function carregarDadosParaEdicao(programa, linhaHTML) {
         limparFormularios();
+
+        linhaHTML.classList.add('linha-selecionada');
 
         document.getElementById("id").value = programa.id;
         document.getElementById("novoNome").value = programa.nome;
@@ -156,7 +175,9 @@
         tbody.innerHTML = "";
         programas.forEach(p => {
             const tr = document.createElement("tr");
-            tr.onclick = () => carregarDadosParaEdicao(p);
+
+            tr.onclick = function() { carregarDadosParaEdicao(p, this); };
+
             tr.innerHTML = `
                 <td>${p.id}</td>
                 <td><strong>${p.nome}</strong></td>
@@ -185,14 +206,15 @@
             if (resp.ok) {
                 const dados = await resp.json();
                 renderizarTabela(dados);
+                if (dados.length === 0) mostrarToast("Nenhum programa encontrado.", "erro");
             } else {
-                alert("Erro ao buscar.");
+                mostrarToast("Erro ao realizar a busca.", "erro");
             }
         } catch (e) { console.error(e); }
     }
 
     async function criar() {
-        await fetch(api, {
+        const resp = await fetch(api, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -203,13 +225,18 @@
             })
         });
 
-        limparFormularios();
-        listarTodos();
+        if (resp.ok) {
+            mostrarToast("Programa criado com sucesso!", "sucesso");
+            limparFormularios();
+            listarTodos();
+        } else {
+            mostrarToast("Erro ao criar o programa.", "erro");
+        }
     }
 
     async function atualizar() {
         const id = document.getElementById("id").value;
-        await fetch(`${api}?id=${id}`, {
+        const resp = await fetch(`${api}?id=${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -220,16 +247,31 @@
             })
         });
 
-        limparFormularios();
-        listarTodos();
+        if (resp.ok) {
+            mostrarToast("Programa atualizado com sucesso!", "sucesso");
+            limparFormularios();
+            listarTodos();
+        } else {
+            mostrarToast("Erro ao atualizar o programa.", "erro");
+        }
     }
 
     async function deletar() {
         const nome = document.getElementById("deletarNome").value;
-        await fetch(`${api}?nome=${encodeURIComponent(nome)}`, { method: "DELETE" });
 
-        limparFormularios();
-        listarTodos();
+        if (!confirm(`ATENÇÃO!\nTem certeza que deseja excluir o programa "${nome}" permanentemente?`)) {
+            return;
+        }
+
+        const resp = await fetch(`${api}?nome=${encodeURIComponent(nome)}`, { method: "DELETE" });
+
+        if (resp.ok) {
+            mostrarToast(`"${nome}" deletado com sucesso!`, "sucesso");
+            limparFormularios();
+            listarTodos();
+        } else {
+            mostrarToast("Erro ao deletar o programa.", "erro");
+        }
     }
 
     listarTodos();
