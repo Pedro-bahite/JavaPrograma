@@ -2,108 +2,126 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard TV - Programas</title>
+    <title>TV Control Center - Programas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="toast-container"></div>
 
+<div class="tv-frame">
 
-<h1>Gerenciador de Programas de TV</h1>
-
-<div class="dashboard-container">
-
-    <div class="dashboard-top">
-
-        <div class="card">
-            <h2>Criar Novo</h2>
-            <input type="text" id="nome" class="valida-criar" placeholder="Nome do Programa">
-            <select id="categoria" class="valida-criar">
-                <option value="" disabled selected>Categoria</option>
-                <option value="Desenho">Desenho</option>
-                <option value="Seriado">Seriado</option>
-                <option value="Filme">Filme</option>
-                <option value="Jornal">Jornal</option>
-                <option value="Novela">Novela</option>
-                <option value="Programa de auditório">Programa de auditório</option>
-                <option value="Esporte">Esporte</option>
-                <option value="Reality show">Reality show</option>
-            </select>
-            <input type="text" id="emissora" class="valida-criar" placeholder="Emissora">
-            <select id="class_indic" class="valida-criar">
-                <option value="" disabled selected>Classificação</option>
-                <option value="Livre">Livre para todas as idades</option>
-                <option value="10 anos">+10 anos</option>
-                <option value="12 anos">+12 anos</option>
-                <option value="14 anos">+14 anos</option>
-                <option value="16 anos">+16 anos</option>
-                <option value="18 anos">+18 anos</option>
-            </select>
-            <button id="btnCriar" onclick="criar()" disabled>Salvar</button>
+    <header class="tv-header">
+        <div class="tv-brand">
+            <span class="power-led"></span>
+            <strong>STUDIO MONITOR // MAIN FEED</strong>
         </div>
-
-        <div class="card">
-            <h2>Atualizar Existente</h2>
-            <input type="number" id="id" class="valida-atualizar" placeholder="ID do Programa" readonly>
-            <input type="text" id="novoNome" class="valida-atualizar" placeholder="Novo Nome">
-            <select id="novaCategoria" class="valida-atualizar">
-                <option value="" disabled selected>Nova Categoria</option>
-                <option value="Desenho">Desenho</option>
-                <option value="Seriado">Seriado</option>
-                <option value="Filme">Filme</option>
-                <option value="Jornal">Jornal</option>
-                <option value="Novela">Novela</option>
-                <option value="Programa de auditório">Programa de auditório</option>
-                <option value="Esporte">Esporte</option>
-                <option value="Reality show">Reality show</option>
-            </select>
-            <input type="text" id="novaEmissora" class="valida-atualizar" placeholder="Nova Emissora">
-            <select id="novaClassIndic" class="valida-atualizar">
-                <option value="" disabled selected>Nova Classificação</option>
-                <option value="Livre">Livre para todas as idades</option>
-                <option value="10 anos">+10 anos</option>
-                <option value="12 anos">+12 anos</option>
-                <option value="14 anos">+14 anos</option>
-                <option value="16 anos">+16 anos</option>
-                <option value="18 anos">+18 anos</option>
-            </select>
-            <button id="btnAtualizar" onclick="atualizar()" disabled>Atualizar</button>
+        <div class="tv-status">
+            <span class="live-badge"><span class="dot"></span> NO AR</span>
+            <span class="channel-display">CH 04 - EPG GUIDE</span>
         </div>
+    </header>
 
-        <div class="card">
-            <h2>Buscar Programa</h2>
-            <input type="text" id="buscarNome" class="valida-buscar" placeholder="Digite parte do nome">
-            <button id="btnBuscar" onclick="buscar()" disabled>Pesquisar</button>
-            <button onclick="listarTodos()" class="btn-secundario">Limpar Busca</button>
-        </div>
+    <div class="tv-screen">
 
-        <div class="card">
-            <h2>Deletar</h2>
-            <input type="text" id="deletarNome" class="valida-deletar" placeholder="Nome Exato do Programa">
-            <button id="btnDeletar" onclick="deletar()" class="btn-perigo" disabled>Deletar</button>
+        <div class="dashboard-container">
+
+            <div class="dashboard-top">
+
+                <div class="card">
+                    <h2>+ NOVO PROGRAMA</h2>
+                    <input type="text" id="nome" class="valida-criar" placeholder="Nome do Programa">
+                    <select id="categoria" class="valida-criar">
+                        <option value="" disabled selected>Categoria</option>
+                        <option value="Desenho">Desenho</option>
+                        <option value="Seriado">Seriado</option>
+                        <option value="Filme">Filme</option>
+                        <option value="Jornal">Jornal</option>
+                        <option value="Novela">Novela</option>
+                        <option value="Programa de auditório">Programa de auditório</option>
+                        <option value="Esporte">Esporte</option>
+                        <option value="Reality show">Reality show</option>
+                    </select>
+                    <input type="text" id="emissora" class="valida-criar" placeholder="Emissora / Canal">
+                    <select id="class_indic" class="valida-criar">
+                        <option value="" disabled selected>Classificação</option>
+                        <option value="Livre">Livre para todas as idades</option>
+                        <option value="10 anos">+10 anos</option>
+                        <option value="12 anos">+12 anos</option>
+                        <option value="14 anos">+14 anos</option>
+                        <option value="16 anos">+16 anos</option>
+                        <option value="18 anos">+18 anos</option>
+                    </select>
+                    <button id="btnCriar" onclick="criar()" disabled>CADASTRAR</button>
+                </div>
+
+                <div class="card">
+                    <h2>EDITAR SINAL</h2>
+                    <input type="number" id="id" class="valida-atualizar" placeholder="ID (Selecione na Tabela)" readonly>
+                    <input type="text" id="novoNome" class="valida-atualizar" placeholder="Novo Nome">
+                    <select id="novaCategoria" class="valida-atualizar">
+                        <option value="" disabled selected>Nova Categoria</option>
+                        <option value="Desenho">Desenho</option>
+                        <option value="Seriado">Seriado</option>
+                        <option value="Filme">Filme</option>
+                        <option value="Jornal">Jornal</option>
+                        <option value="Novela">Novela</option>
+                        <option value="Programa de auditório">Programa de auditório</option>
+                        <option value="Esporte">Esporte</option>
+                        <option value="Reality show">Reality show</option>
+                    </select>
+                    <input type="text" id="novaEmissora" class="valida-atualizar" placeholder="Nova Emissora">
+                    <select id="novaClassIndic" class="valida-atualizar">
+                        <option value="" disabled selected>Nova Classificação</option>
+                        <option value="Livre">Livre para todas as idades</option>
+                        <option value="10 anos">+10 anos</option>
+                        <option value="12 anos">+12 anos</option>
+                        <option value="14 anos">+14 anos</option>
+                        <option value="16 anos">+16 anos</option>
+                        <option value="18 anos">+18 anos</option>
+                    </select>
+                    <button id="btnAtualizar" onclick="atualizar()" disabled>ATUALIZAR</button>
+                </div>
+
+                <div class="card">
+                    <h2>BUSCA DE GRADE</h2>
+                    <input type="text" id="buscarNome" class="valida-buscar" placeholder="Nome ou Trecho...">
+                    <button id="btnBuscar" onclick="buscar()" disabled>FILTRAR</button>
+                    <button onclick="listarTodos()" class="btn-secundario">LIMPAR FILTRO</button>
+                </div>
+
+                <div class="card">
+                    <h2>REMOVER DA GRADE</h2>
+                    <input type="text" id="deletarNome" class="valida-deletar" placeholder="Nome Exato do Programa">
+                    <button id="btnDeletar" onclick="deletar()" class="btn-perigo" disabled>EXCLUIR</button>
+                </div>
+
+            </div>
+
+            <main class="painel-tabela">
+                <div class="tabela-header-bar">
+                    <span>PROGRAMAÇÃO CADASTRADA // GUIA EPG</span>
+                </div>
+                <div class="tabela-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NOME DO PROGRAMA</th>
+                            <th>CATEGORIA</th>
+                            <th>EMISSORA / CANAL</th>
+                            <th>CLASSIFICAÇÃO</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabelaCorpo">
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
         </div>
 
     </div>
-
-    <main class="painel-tabela">
-        <div class="tabela-wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Categoria</th>
-                    <th>Emissora</th>
-                    <th>Classificação</th>
-                </tr>
-                </thead>
-                <tbody id="tabelaCorpo">
-                </tbody>
-            </table>
-        </div>
-    </main>
-
 </div>
 
 <script>
@@ -112,12 +130,9 @@
     function mostrarToast(mensagem, tipo = 'sucesso') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-
         toast.className = `toast toast-${tipo}`;
         toast.innerText = mensagem;
-
         container.appendChild(toast);
-
         setTimeout(() => toast.remove(), 3000);
     }
 
@@ -148,13 +163,11 @@
         document.getElementById("btnCriar").disabled = true;
         document.getElementById("btnAtualizar").disabled = true;
         document.getElementById("btnDeletar").disabled = true;
-
         document.querySelectorAll('.linha-selecionada').forEach(linha => linha.classList.remove('linha-selecionada'));
     }
 
     function carregarDadosParaEdicao(programa, linhaHTML) {
         limparFormularios();
-
         linhaHTML.classList.add('linha-selecionada');
 
         document.getElementById("id").value = programa.id;
@@ -175,13 +188,11 @@
         tbody.innerHTML = "";
         programas.forEach(p => {
             const tr = document.createElement("tr");
-
             tr.onclick = function() { carregarDadosParaEdicao(p, this); };
-
             tr.innerHTML = `
-                <td>${p.id}</td>
+                <td><span class="badge-id">#${p.id}</span></td>
                 <td><strong>${p.nome}</strong></td>
-                <td>${p.categoria}</td>
+                <td><span class="tag-cat">${p.categoria}</span></td>
                 <td>${p.emissora}</td>
                 <td>${p.class_indic || p.classIndic}</td>
             `;
@@ -206,9 +217,9 @@
             if (resp.ok) {
                 const dados = await resp.json();
                 renderizarTabela(dados);
-                if (dados.length === 0) mostrarToast("Nenhum programa encontrado.", "erro");
+                if (dados.length === 0) mostrarToast("Nenhum programa encontrado na grade.", "erro");
             } else {
-                mostrarToast("Erro ao realizar a busca.", "erro");
+                mostrarToast("Erro ao realizar busca.", "erro");
             }
         } catch (e) { console.error(e); }
     }
@@ -226,11 +237,11 @@
         });
 
         if (resp.ok) {
-            mostrarToast("Programa criado com sucesso!", "sucesso");
+            mostrarToast("Programa inserido na grade!", "sucesso");
             limparFormularios();
             listarTodos();
         } else {
-            mostrarToast("Erro ao criar o programa.", "erro");
+            mostrarToast("Erro ao salvar programa.", "erro");
         }
     }
 
@@ -248,33 +259,67 @@
         });
 
         if (resp.ok) {
-            mostrarToast("Programa atualizado com sucesso!", "sucesso");
+            mostrarToast("Grade atualizada com sucesso!", "sucesso");
             limparFormularios();
             listarTodos();
         } else {
-            mostrarToast("Erro ao atualizar o programa.", "erro");
+            mostrarToast("Erro ao atualizar o sinal.", "erro");
         }
     }
 
-    async function deletar() {
-        const nome = document.getElementById("deletarNome").value;
+    function deletar() {
+        nomeParaDeletar = document.getElementById("deletarNome").value;
+        if (!nomeParaDeletar) return;
 
-        if (!confirm(`ATENÇÃO!\nTem certeza que deseja excluir o programa "${nome}" permanentemente?`)) {
-            return;
-        }
+        document.getElementById("modalNomePrograma").innerText = nomeParaDeletar.toUpperCase();
+        document.getElementById("modalExclusao").classList.add("ativo");
+    }
 
-        const resp = await fetch(`${api}?nome=${encodeURIComponent(nome)}`, { method: "DELETE" });
+    function fecharModal() {
+        document.getElementById("modalExclusao").classList.remove("ativo");
+        nomeParaDeletar = "";
+    }
 
-        if (resp.ok) {
-            mostrarToast(`"${nome}" deletado com sucesso!`, "sucesso");
-            limparFormularios();
-            listarTodos();
-        } else {
-            mostrarToast("Erro ao deletar o programa.", "erro");
+    async function confirmarDelecao() {
+        if (!nomeParaDeletar) return;
+
+        const nomeFinal = nomeParaDeletar;
+
+        fecharModal();
+
+        try {
+            const resp = await fetch(`${api}?nome=${encodeURIComponent(nomeFinal)}`, { method: "DELETE" });
+
+            if (resp.ok) {
+                mostrarToast(`Sinal de "${nomeFinal}" cortado com sucesso!`, "sucesso");
+                limparFormularios();
+                listarTodos();
+            } else {
+                console.error("Status da resposta da API:", resp.status);
+                mostrarToast("Erro no servidor ao remover programa.", "erro");
+            }
+        } catch (e) {
+            console.error("Erro na requisição de deleção:", e);
+            mostrarToast("Falha de conexão (Erro de API).", "erro");
         }
     }
 
     listarTodos();
 </script>
+<div id="modalExclusao" class="modal-overlay">
+    <div class="modal-tv-box">
+        <div class="modal-header">
+            <span class="live-badge"><span class="dot"></span> ALERTA DE SISTEMA</span>
+        </div>
+        <div class="modal-body">
+            <p>Deseja cortar o sinal de <strong id="modalNomePrograma"></strong> da grade permanentemente?</p>
+            <p class="modal-warning">ESTA AÇÃO NÃO PODE SER DESFEITA.</p>
+        </div>
+        <div class="modal-footer">
+            <button onclick="fecharModal()" class="btn-secundario">ABORTAR</button>
+            <button onclick="confirmarDelecao()" class="btn-perigo">CONFIRMAR CORTE</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
