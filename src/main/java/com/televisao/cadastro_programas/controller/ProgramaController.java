@@ -30,8 +30,8 @@ public class ProgramaController {
 
     // 2. Busca por NOME (GET /programa?nome=Chaves)
     @GetMapping(params = "nome")
-    public ResponseEntity<Programa> buscarProgramaPorNome(@RequestParam String nome){
-        return ResponseEntity.ok(programaService.buscarProgramaPorNome(nome));
+    public ResponseEntity<List<Programa>> buscarProgramasPorNome(@RequestParam String nome){
+        return ResponseEntity.ok(programaService.buscarProgramasPorNome(nome));
     }
 
 

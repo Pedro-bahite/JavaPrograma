@@ -4,7 +4,9 @@ import com.televisao.cadastro_programas.infrastructure.entitys.Programa;
 import com.televisao.cadastro_programas.infrastructure.repository.ProgramaRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProgramaService {
@@ -19,11 +21,23 @@ public class ProgramaService {
         repository.saveAndFlush(programa);
     }
 
-    public Programa buscarProgramaPorNome(String nome){
-        return repository.findByNomeContainingIgnoreCase(nome).orElseThrow(
-                () -> new RuntimeException("Nome não encontrado!!")
-        );
+    public List<Programa> buscarProgramasPorNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return buscarTodosProgramas();
+        }
 
+        String nomeNormalizado = removerAcentos(nome.toLowerCase().trim());
+
+        return repository.findAll().stream()
+                .filter(p -> p.getNome() != null &&
+                        removerAcentos(p.getNome().toLowerCase()).contains(nomeNormalizado))
+                .collect(Collectors.toList());
+    }
+
+    private String removerAcentos(String str) {
+        if (str == null) return "";
+        return Normalizer.normalize(str, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     public void deletarProgramaPornome(String nome){
@@ -42,13 +56,11 @@ public class ProgramaService {
                 .build();
 
         repository.saveAndFlush(programaAtualizado);
-
     }
 
     public List<Programa> buscarTodosProgramas() {
         return repository.findAll();
     }
-
 
     public Programa buscarProgramaPorId(Integer id) {
         return repository.findById(id)
