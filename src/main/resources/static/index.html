@@ -1,325 +1,873 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>TV Control Center - Programas</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#141414" />
+        <title>Programflix — Catálogo de programas</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- Os ícones são vetoriais; os banners usam somente texto e CSS. -->
+        <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <symbol id="icon-search" viewBox="0 0 24 24">
+                <circle cx="10.5" cy="10.5" r="6.5" />
+                <path d="m16 16 5 5" />
+            </symbol>
+            <symbol id="icon-home" viewBox="0 0 24 24">
+                <path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z" />
+            </symbol>
+            <symbol id="icon-tv" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="13" rx="1" />
+                <path d="M7 21h10" />
+            </symbol>
+            <symbol id="icon-film" viewBox="0 0 24 24">
+                <path d="M3 9h18v12H3zM3 9V5l17-3 1 7M7 4l3 4m3-5 3 5" />
+            </symbol>
+            <symbol id="icon-grid" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+            </symbol>
+            <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" /></symbol>
+            <symbol id="icon-info" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 11v6m0-11v1" />
+            </symbol>
+            <symbol id="icon-edit" viewBox="0 0 24 24">
+                <path d="m15 4 5 5M4 16 17 3l4 4L8 20l-5 1Z" />
+            </symbol>
+            <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6" /></symbol>
+            <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 4 8 8-8 8" /></symbol>
+        </svg>
 
-<div id="toast-container"></div>
+        <a class="skip-link" href="#catalogo">Ir para o catálogo</a>
+        <aside class="sidebar" aria-label="Navegação principal">
+            <a class="brand-mark" href="#inicio" aria-label="Programflix — início">N</a>
+            <nav class="sidebar-nav">
+                <button
+                    class="nav-button"
+                    id="navBusca"
+                    title="Buscar programas"
+                    aria-label="Buscar programas"
+                >
+                    <svg class="icon"><use href="#icon-search" /></svg><span>Buscar</span>
+                </button>
+                <button
+                    class="nav-button active"
+                    data-filtro=""
+                    title="Início"
+                    aria-label="Início"
+                    aria-pressed="true"
+                >
+                    <svg class="icon"><use href="#icon-home" /></svg><span>Início</span>
+                </button>
+                <button
+                    class="nav-button"
+                    data-filtro="Seriado"
+                    title="Seriados"
+                    aria-label="Seriados"
+                    aria-pressed="false"
+                >
+                    <svg class="icon"><use href="#icon-tv" /></svg><span>Seriados</span>
+                </button>
+                <button
+                    class="nav-button"
+                    data-filtro="Filme"
+                    title="Filmes"
+                    aria-label="Filmes"
+                    aria-pressed="false"
+                >
+                    <svg class="icon"><use href="#icon-film" /></svg><span>Filmes</span>
+                </button>
+                <button
+                    class="nav-button"
+                    id="navCatalogo"
+                    title="Todos os programas"
+                    aria-label="Todos os programas"
+                >
+                    <svg class="icon"><use href="#icon-grid" /></svg><span>Catálogo</span>
+                </button>
+                <button
+                    class="nav-button nav-add"
+                    id="navCriar"
+                    title="Cadastrar programa"
+                    aria-label="Cadastrar programa"
+                >
+                    <svg class="icon"><use href="#icon-plus" /></svg><span>Cadastrar</span>
+                </button>
+            </nav>
+            <span class="sidebar-caption" aria-hidden="true">PROGRAMFLIX</span>
+        </aside>
 
-<div class="tv-frame">
+        <main id="inicio">
+            <header class="topbar">
+                <a class="wordmark" href="#inicio">PROGRAMFLIX</a>
+                <span class="topbar-label">Seu catálogo de programas</span>
+                <button class="button button-small button-outline" id="novoPrograma">
+                    <svg class="icon"><use href="#icon-plus" /></svg><span>Novo programa</span>
+                </button>
+            </header>
 
-    <header class="tv-header">
-        <div class="tv-brand">
-            <span class="power-led"></span>
-            <strong>STUDIO MONITOR // MAIN FEED</strong>
-        </div>
-        <div class="tv-status">
-            <span class="live-badge"><span class="dot"></span> NO AR</span>
-            <span class="channel-display">CH 04 - EPG GUIDE</span>
-        </div>
-    </header>
-
-    <div class="tv-screen">
-
-        <div class="dashboard-container">
-
-            <div class="dashboard-top">
-
-                <div class="card">
-                    <h2>+ NOVO PROGRAMA</h2>
-                    <input type="text" id="nome" class="valida-criar" placeholder="Nome do Programa">
-                    <select id="categoria" class="valida-criar">
-                        <option value="" disabled selected>Categoria</option>
-                        <option value="Desenho">Desenho</option>
-                        <option value="Seriado">Seriado</option>
-                        <option value="Filme">Filme</option>
-                        <option value="Jornal">Jornal</option>
-                        <option value="Novela">Novela</option>
-                        <option value="Programa de auditório">Programa de auditório</option>
-                        <option value="Esporte">Esporte</option>
-                        <option value="Reality show">Reality show</option>
-                    </select>
-                    <input type="text" id="emissora" class="valida-criar" placeholder="Emissora / Canal">
-                    <select id="class_indic" class="valida-criar">
-                        <option value="" disabled selected>Classificação</option>
-                        <option value="Livre">Livre para todas as idades</option>
-                        <option value="10 anos">+10 anos</option>
-                        <option value="12 anos">+12 anos</option>
-                        <option value="14 anos">+14 anos</option>
-                        <option value="16 anos">+16 anos</option>
-                        <option value="18 anos">+18 anos</option>
-                    </select>
-                    <button id="btnCriar" onclick="criar()" disabled>CADASTRAR</button>
+            <section class="hero theme-0" id="hero" aria-labelledby="heroTitulo">
+                <div class="hero-art" aria-hidden="true">
+                    <span class="hero-monogram" id="heroMonograma">N</span
+                    ><span class="art-line art-line-one"></span
+                    ><span class="art-line art-line-two"></span>
                 </div>
-
-                <div class="card">
-                    <h2>EDITAR SINAL</h2>
-                    <input type="number" id="id" class="valida-atualizar" placeholder="ID (Selecione na Tabela)" readonly>
-                    <input type="text" id="novoNome" class="valida-atualizar" placeholder="Novo Nome">
-                    <select id="novaCategoria" class="valida-atualizar">
-                        <option value="" disabled selected>Nova Categoria</option>
-                        <option value="Desenho">Desenho</option>
-                        <option value="Seriado">Seriado</option>
-                        <option value="Filme">Filme</option>
-                        <option value="Jornal">Jornal</option>
-                        <option value="Novela">Novela</option>
-                        <option value="Programa de auditório">Programa de auditório</option>
-                        <option value="Esporte">Esporte</option>
-                        <option value="Reality show">Reality show</option>
-                    </select>
-                    <input type="text" id="novaEmissora" class="valida-atualizar" placeholder="Nova Emissora">
-                    <select id="novaClassIndic" class="valida-atualizar">
-                        <option value="" disabled selected>Nova Classificação</option>
-                        <option value="Livre">Livre para todas as idades</option>
-                        <option value="10 anos">+10 anos</option>
-                        <option value="12 anos">+12 anos</option>
-                        <option value="14 anos">+14 anos</option>
-                        <option value="16 anos">+16 anos</option>
-                        <option value="18 anos">+18 anos</option>
-                    </select>
-                    <button id="btnAtualizar" onclick="atualizar()" disabled>ATUALIZAR</button>
+                <div class="hero-content">
+                    <p class="original-label">
+                        <span class="n-mark" aria-hidden="true">N</span
+                        ><span id="heroTipo">CATÁLOGO</span>
+                    </p>
+                    <h1 id="heroTitulo">Sua próxima<br />descoberta.</h1>
+                    <p class="hero-highlight">
+                        <span class="highlight-mark" aria-hidden="true">N</span
+                        ><span id="heroDestaque">Todos os seus programas em um só lugar</span>
+                    </p>
+                    <p class="hero-description" id="heroDescricao">
+                        Explore seu catálogo, descubra os programas por categoria e mantenha sua
+                        programação sempre organizada.
+                    </p>
+                    <div class="hero-meta" id="heroMeta" hidden>
+                        <span id="heroCategoria"></span
+                        ><span class="meta-dot" aria-hidden="true">•</span
+                        ><span id="heroEmissora"></span>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="button button-white" id="heroPrincipal">
+                            <svg class="icon"><use href="#icon-plus" /></svg
+                            ><span>Cadastrar programa</span>
+                        </button>
+                        <button class="button button-glass" id="heroInformacoes" hidden>
+                            <svg class="icon"><use href="#icon-info" /></svg>Mais informações
+                        </button>
+                    </div>
                 </div>
+                <span class="hero-age" id="heroClassificacao" hidden></span>
+                <span class="hero-watermark" aria-hidden="true">PROGRAMFLIX</span>
+            </section>
 
-                <div class="card">
-                    <h2>BUSCA DE GRADE</h2>
-                    <input type="text" id="buscarNome" class="valida-buscar" placeholder="Nome ou Trecho...">
-                    <button id="btnBuscar" onclick="buscar()" disabled>FILTRAR</button>
-                    <button onclick="listarTodos()" class="btn-secundario">LIMPAR FILTRO</button>
+            <section
+                class="catalog"
+                id="catalogo"
+                aria-label="Catálogo de programas"
+                aria-busy="true"
+            >
+                <div class="catalog-toolbar">
+                    <div class="catalog-heading">
+                        <p class="eyebrow">EXPLORE O CATÁLOGO</p>
+                        <h2 id="catalogoTitulo">Seus programas</h2>
+                        <p id="contador" aria-live="polite">Carregando catálogo…</p>
+                    </div>
+                    <form class="search-form" id="formBusca" role="search">
+                        <label class="sr-only" for="buscarNome">Buscar pelo nome do programa</label>
+                        <svg class="icon" aria-hidden="true"><use href="#icon-search" /></svg>
+                        <input
+                            type="search"
+                            id="buscarNome"
+                            placeholder="Títulos, programas…"
+                            autocomplete="off"
+                        />
+                        <button class="search-submit" type="submit">Buscar</button>
+                        <button
+                            class="search-clear"
+                            id="limparBusca"
+                            type="button"
+                            title="Limpar busca"
+                            aria-label="Limpar busca"
+                            hidden
+                        >
+                            <svg class="icon"><use href="#icon-close" /></svg>
+                        </button>
+                    </form>
                 </div>
-
-                <div class="card">
-                    <h2>REMOVER DA GRADE</h2>
-                    <input type="text" id="deletarNome" class="valida-deletar" placeholder="Nome Exato do Programa">
-                    <button id="btnDeletar" onclick="deletar()" class="btn-perigo" disabled>EXCLUIR</button>
+                <div class="filter-bar" id="filtros" aria-label="Filtrar por categoria"></div>
+                <div class="catalog-status" id="estadoCatalogo" role="status">
+                    <span class="loading-ring" aria-hidden="true"></span>
+                    <h3>Carregando seus programas</h3>
+                    <p>Aguarde um instante.</p>
                 </div>
+                <div id="fileiras"></div>
+            </section>
+            <footer class="footer">
+                <span>PROGRAMFLIX</span>
+                <p>Seu catálogo. Sua programação.</p>
+                <a href="#inicio">Voltar ao início ↑</a>
+            </footer>
+        </main>
 
+        <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+        <!-- Detalhes do programa selecionado. -->
+        <dialog class="modal modal-details" id="modalDetalhes" aria-labelledby="detalhesTitulo">
+            <button
+                class="close-button"
+                type="button"
+                data-fechar="modalDetalhes"
+                aria-label="Fechar detalhes"
+            >
+                <svg class="icon"><use href="#icon-close" /></svg>
+            </button>
+            <div class="details-banner theme-0" id="detalhesBanner">
+                <p class="original-label">
+                    <span class="n-mark" aria-hidden="true">N</span>PROGRAMA
+                </p>
+                <h2 id="detalhesTitulo"></h2>
+                <span class="details-monogram" id="detalhesMonograma" aria-hidden="true"></span>
             </div>
+            <div class="modal-content">
+                <p class="eyebrow">SOBRE O PROGRAMA</p>
+                <dl class="details-list">
+                    <div>
+                        <dt>Categoria</dt>
+                        <dd id="detalhesCategoria"></dd>
+                    </div>
+                    <div>
+                        <dt>Emissora / canal</dt>
+                        <dd id="detalhesEmissora"></dd>
+                    </div>
+                    <div>
+                        <dt>Classificação indicativa</dt>
+                        <dd id="detalhesClassificacao"></dd>
+                    </div>
+                    <div>
+                        <dt>Identificador</dt>
+                        <dd id="detalhesId"></dd>
+                    </div>
+                </dl>
+                <button class="button button-red" id="editarSelecionado">
+                    <svg class="icon"><use href="#icon-edit" /></svg>Editar programa
+                </button>
+            </div>
+        </dialog>
 
-            <main class="painel-tabela">
-                <div class="tabela-header-bar">
-                    <span>PROGRAMAÇÃO CADASTRADA // GUIA EPG</span>
+        <!-- O mesmo formulário é utilizado para cadastro e edição. -->
+        <dialog class="modal modal-form" id="modalFormulario" aria-labelledby="formTitulo">
+            <button
+                class="close-button"
+                type="button"
+                data-fechar="modalFormulario"
+                aria-label="Fechar formulário"
+            >
+                <svg class="icon"><use href="#icon-close" /></svg>
+            </button>
+            <div class="modal-content">
+                <p class="eyebrow">SEU CATÁLOGO</p>
+                <h2 id="formTitulo">Novo programa</h2>
+                <p class="form-description">
+                    Preencha os dados para adicionar um programa ao catálogo.
+                </p>
+                <form id="formPrograma">
+                    <input type="hidden" id="programaId" />
+                    <label for="programaNome">Nome do programa</label
+                    ><input
+                        id="programaNome"
+                        name="nome"
+                        type="text"
+                        placeholder="Ex.: Stranger Things"
+                        required
+                    />
+                    <div class="form-grid">
+                        <div>
+                            <label for="programaCategoria">Categoria</label
+                            ><select id="programaCategoria" name="categoria" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option>Desenho</option>
+                                <option>Seriado</option>
+                                <option>Filme</option>
+                                <option>Jornal</option>
+                                <option>Novela</option>
+                                <option>Programa de auditório</option>
+                                <option>Esporte</option>
+                                <option>Reality show</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="programaClassificacao">Classificação</label
+                            ><select id="programaClassificacao" name="class_indic" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="Livre">Livre</option>
+                                <option value="10 anos">10 anos</option>
+                                <option value="12 anos">12 anos</option>
+                                <option value="14 anos">14 anos</option>
+                                <option value="16 anos">16 anos</option>
+                                <option value="18 anos">18 anos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <label for="programaEmissora">Emissora / canal</label
+                    ><input
+                        id="programaEmissora"
+                        name="emissora"
+                        type="text"
+                        placeholder="Ex.: Netflix, Globo, HBO…"
+                        required
+                    />
+                    <p class="form-note">
+                        O banner é criado automaticamente a partir do título e da categoria.
+                    </p>
+                    <div class="form-actions">
+                        <button class="button button-red" id="btnSalvar" type="submit">
+                            Cadastrar programa</button
+                        ><button
+                            class="button button-outline"
+                            type="button"
+                            data-fechar="modalFormulario"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                    <button class="delete-link" id="btnExcluir" type="button" hidden>
+                        Excluir este programa
+                    </button>
+                </form>
+            </div>
+        </dialog>
+
+        <dialog class="modal modal-delete" id="modalExclusao" aria-labelledby="exclusaoTitulo">
+            <div class="modal-content">
+                <span class="delete-symbol" aria-hidden="true">!</span>
+                <h2 id="exclusaoTitulo">Excluir programa?</h2>
+                <p>
+                    O programa <strong id="modalNomePrograma"></strong> será removido do catálogo.
+                    Esta ação não pode ser desfeita.
+                </p>
+                <div class="form-actions">
+                    <button
+                        class="button button-outline"
+                        data-fechar="modalExclusao"
+                        type="button"
+                        autofocus
+                    >
+                        Cancelar</button
+                    ><button class="button button-red" id="confirmarExclusao" type="button">
+                        Sim, excluir
+                    </button>
                 </div>
-                <div class="tabela-wrapper">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>NOME DO PROGRAMA</th>
-                            <th>CATEGORIA</th>
-                            <th>EMISSORA / CANAL</th>
-                            <th>CLASSIFICAÇÃO</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tabelaCorpo">
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+            </div>
+        </dialog>
 
-        </div>
+        <script>
+            // Mantém os endpoints e o formato de dados do HTML original.
+            const api = "/programa";
+            const categorias = [
+                "Desenho",
+                "Seriado",
+                "Filme",
+                "Jornal",
+                "Novela",
+                "Programa de auditório",
+                "Esporte",
+                "Reality show",
+            ];
+            const $ = (id) => document.getElementById(id);
+            let programas = [];
+            let selecionado = null;
+            let destaque = null;
+            let categoriaAtiva = "";
+            let consultaAtiva = "";
+            let carregado = false;
+            let gravando = false;
+            let consultaController;
 
-    </div>
-</div>
-
-<script>
-    const api = "/programa";
-
-    function mostrarToast(mensagem, tipo = 'sucesso') {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${tipo}`;
-        toast.innerText = mensagem;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-
-    function configurarValidacao(classeInputs, idBotao) {
-        const inputs = document.querySelectorAll(`.${classeInputs}`);
-        const botao = document.getElementById(idBotao);
-
-        if (!botao || inputs.length === 0) return;
-
-        function checarCampos() {
-            const todosPreenchidos = Array.from(inputs).every(input => input.value.trim() !== "");
-            botao.disabled = !todosPreenchidos;
-        }
-
-        inputs.forEach(input => {
-            input.addEventListener("input", checarCampos);
-            input.addEventListener("change", checarCampos);
-        });
-    }
-
-    configurarValidacao("valida-criar", "btnCriar");
-    configurarValidacao("valida-atualizar", "btnAtualizar");
-    configurarValidacao("valida-buscar", "btnBuscar");
-    configurarValidacao("valida-deletar", "btnDeletar");
-
-    function limparFormularios() {
-        document.querySelectorAll('.valida-criar, .valida-atualizar, .valida-deletar').forEach(input => input.value = "");
-        document.getElementById("btnCriar").disabled = true;
-        document.getElementById("btnAtualizar").disabled = true;
-        document.getElementById("btnDeletar").disabled = true;
-        document.querySelectorAll('.linha-selecionada').forEach(linha => linha.classList.remove('linha-selecionada'));
-    }
-
-    function carregarDadosParaEdicao(programa, linhaHTML) {
-        limparFormularios();
-        linhaHTML.classList.add('linha-selecionada');
-
-        document.getElementById("id").value = programa.id;
-        document.getElementById("novoNome").value = programa.nome;
-        document.getElementById("novaCategoria").value = programa.categoria;
-        document.getElementById("novaEmissora").value = programa.emissora;
-        document.getElementById("novaClassIndic").value = programa.class_indic || programa.classIndic;
-        document.getElementById("deletarNome").value = programa.nome;
-
-        document.querySelectorAll('.valida-atualizar, .valida-deletar').forEach(input => {
-            input.dispatchEvent(new Event('input'));
-            input.dispatchEvent(new Event('change'));
-        });
-    }
-
-    function renderizarTabela(programas) {
-        const tbody = document.getElementById("tabelaCorpo");
-        tbody.innerHTML = "";
-        programas.forEach(p => {
-            const tr = document.createElement("tr");
-            tr.onclick = function() { carregarDadosParaEdicao(p, this); };
-            tr.innerHTML = `
-                <td><span class="badge-id">#${p.id}</span></td>
-                <td><strong>${p.nome}</strong></td>
-                <td><span class="tag-cat">${p.categoria}</span></td>
-                <td>${p.emissora}</td>
-                <td>${p.class_indic || p.classIndic}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    async function listarTodos() {
-        document.getElementById("buscarNome").value = "";
-        document.getElementById("btnBuscar").disabled = true;
-        try {
-            const resp = await fetch(api);
-            if (resp.ok) renderizarTabela(await resp.json());
-        } catch (e) { console.error(e); }
-    }
-
-    async function buscar() {
-        const nome = document.getElementById("buscarNome").value;
-        const url = nome ? `${api}?nome=${encodeURIComponent(nome)}` : api;
-        try {
-            const resp = await fetch(url);
-            if (resp.ok) {
-                const dados = await resp.json();
-                renderizarTabela(dados);
-                if (dados.length === 0) mostrarToast("Nenhum programa encontrado na grade.", "erro");
-            } else {
-                mostrarToast("Erro ao realizar busca.", "erro");
+            function icone(nome) {
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.classList.add("icon");
+                svg.setAttribute("aria-hidden", "true");
+                const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+                use.setAttribute("href", `#icon-${nome}`);
+                svg.append(use);
+                return svg;
             }
-        } catch (e) { console.error(e); }
-    }
 
-    async function criar() {
-        const resp = await fetch(api, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                nome: document.getElementById("nome").value,
-                categoria: document.getElementById("categoria").value,
-                emissora: document.getElementById("emissora").value,
-                class_indic: document.getElementById("class_indic").value
-            })
-        });
-
-        if (resp.ok) {
-            mostrarToast("Programa inserido na grade!", "sucesso");
-            limparFormularios();
-            listarTodos();
-        } else {
-            mostrarToast("Erro ao salvar programa.", "erro");
-        }
-    }
-
-    async function atualizar() {
-        const id = document.getElementById("id").value;
-        const resp = await fetch(`${api}?id=${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                nome: document.getElementById("novoNome").value,
-                categoria: document.getElementById("novaCategoria").value,
-                emissora: document.getElementById("novaEmissora").value,
-                class_indic: document.getElementById("novaClassIndic").value
-            })
-        });
-
-        if (resp.ok) {
-            mostrarToast("Grade atualizada com sucesso!", "sucesso");
-            limparFormularios();
-            listarTodos();
-        } else {
-            mostrarToast("Erro ao atualizar o sinal.", "erro");
-        }
-    }
-
-    function deletar() {
-        nomeParaDeletar = document.getElementById("deletarNome").value;
-        if (!nomeParaDeletar) return;
-
-        document.getElementById("modalNomePrograma").innerText = nomeParaDeletar.toUpperCase();
-        document.getElementById("modalExclusao").classList.add("ativo");
-    }
-
-    function fecharModal() {
-        document.getElementById("modalExclusao").classList.remove("ativo");
-        nomeParaDeletar = "";
-    }
-
-    async function confirmarDelecao() {
-        if (!nomeParaDeletar) return;
-
-        const nomeFinal = nomeParaDeletar;
-
-        fecharModal();
-
-        try {
-            const resp = await fetch(`${api}?nome=${encodeURIComponent(nomeFinal)}`, { method: "DELETE" });
-
-            if (resp.ok) {
-                mostrarToast(`Sinal de "${nomeFinal}" cortado com sucesso!`, "sucesso");
-                limparFormularios();
-                listarTodos();
-            } else {
-                console.error("Status da resposta da API:", resp.status);
-                mostrarToast("Erro no servidor ao remover programa.", "erro");
+            function classificacao(programa) {
+                return programa.class_indic || programa.classIndic || "Não informada";
             }
-        } catch (e) {
-            console.error("Erro na requisição de deleção:", e);
-            mostrarToast("Falha de conexão (Erro de API).", "erro");
-        }
-    }
 
-    listarTodos();
-</script>
-<div id="modalExclusao" class="modal-overlay">
-    <div class="modal-tv-box">
-        <div class="modal-header">
-            <span class="live-badge"><span class="dot"></span> ALERTA DE SISTEMA</span>
-        </div>
-        <div class="modal-body">
-            <p>Deseja cortar o sinal de <strong id="modalNomePrograma"></strong> da grade permanentemente?</p>
-            <p class="modal-warning">ESTA AÇÃO NÃO PODE SER DESFEITA.</p>
-        </div>
-        <div class="modal-footer">
-            <button onclick="fecharModal()" class="btn-secundario">ABORTAR</button>
-            <button onclick="confirmarDelecao()" class="btn-perigo">CONFIRMAR CORTE</button>
-        </div>
-    </div>
-</div>
-</body>
+            function tema(programa) {
+                const texto = `${programa.nome || ""}${programa.categoria || ""}`;
+                let hash = 0;
+                for (const letra of texto) hash = (hash * 31 + letra.charCodeAt(0)) >>> 0;
+                return hash % 6;
+            }
+
+            function iniciais(nome) {
+                return String(nome || "N")
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((parte) => Array.from(parte)[0])
+                    .join("")
+                    .toUpperCase();
+            }
+
+            function mostrarToast(mensagem, tipo = "sucesso") {
+                const toast = document.createElement("div");
+                toast.className = `toast toast-${tipo}`;
+                toast.textContent = mensagem;
+                $("toast-container").append(toast);
+                setTimeout(() => toast.remove(), 5000);
+            }
+
+            function sincronizarModais() {
+                document.body.classList.toggle(
+                    "modal-open",
+                    Boolean(document.querySelector("dialog[open]")),
+                );
+            }
+
+            function abrirModal(id) {
+                if (!$(id).open) $(id).showModal();
+                sincronizarModais();
+            }
+
+            function fecharModal(id) {
+                if (gravando && (id === "modalFormulario" || id === "modalExclusao")) return;
+                $(id).close();
+                sincronizarModais();
+            }
+
+            document.querySelectorAll("[data-fechar]").forEach((botao) => {
+                botao.addEventListener("click", () => fecharModal(botao.dataset.fechar));
+            });
+            document.querySelectorAll("dialog").forEach((modal) => {
+                modal.addEventListener("close", sincronizarModais);
+                modal.addEventListener("cancel", (evento) => {
+                    if (gravando) evento.preventDefault();
+                });
+                modal.addEventListener("click", (evento) => {
+                    const caixa = modal.getBoundingClientRect();
+                    if (
+                        evento.target === modal &&
+                        (evento.clientX < caixa.left ||
+                            evento.clientX > caixa.right ||
+                            evento.clientY < caixa.top ||
+                            evento.clientY > caixa.bottom)
+                    )
+                        fecharModal(modal.id);
+                });
+            });
+
+            function abrirModalCriar() {
+                selecionado = null;
+                $("formPrograma").reset();
+                $("programaId").value = "";
+                $("formTitulo").textContent = "Novo programa";
+                document.querySelector(".form-description").textContent =
+                    "Preencha os dados para adicionar um programa ao catálogo.";
+                $("btnSalvar").textContent = "Cadastrar programa";
+                $("btnExcluir").hidden = true;
+                abrirModal("modalFormulario");
+                $("programaNome").focus();
+            }
+
+            function definirOpcao(id, valor) {
+                const campo = $(id);
+                campo.querySelectorAll("[data-extra]").forEach((opcao) => opcao.remove());
+                if (valor && !Array.from(campo.options).some((opcao) => opcao.value === valor)) {
+                    const opcao = new Option(valor, valor);
+                    opcao.dataset.extra = "true";
+                    campo.add(opcao);
+                }
+                campo.value = valor || "";
+            }
+
+            function abrirModalEditar(programa) {
+                selecionado = programa;
+                $("programaId").value = programa.id;
+                $("programaNome").value = programa.nome || "";
+                $("programaEmissora").value = programa.emissora || "";
+                definirOpcao("programaCategoria", programa.categoria);
+                definirOpcao("programaClassificacao", programa.class_indic || programa.classIndic);
+                $("formTitulo").textContent = "Editar programa";
+                document.querySelector(".form-description").textContent =
+                    "Atualize as informações deste programa.";
+                $("btnSalvar").textContent = "Salvar alterações";
+                $("btnExcluir").hidden = false;
+                fecharModal("modalDetalhes");
+                abrirModal("modalFormulario");
+                $("programaNome").focus();
+            }
+
+            function abrirDetalhes(programa) {
+                selecionado = programa;
+                $("detalhesBanner").className = `details-banner theme-${tema(programa)}`;
+                $("detalhesTitulo").textContent = programa.nome;
+                $("detalhesMonograma").textContent = iniciais(programa.nome);
+                $("detalhesCategoria").textContent = programa.categoria || "Não informada";
+                $("detalhesEmissora").textContent = programa.emissora || "Não informada";
+                $("detalhesClassificacao").textContent = classificacao(programa);
+                $("detalhesId").textContent = `#${programa.id}`;
+                abrirModal("modalDetalhes");
+            }
+
+            function atualizarDestaque(lista) {
+                destaque = lista[0] || null;
+                $("hero").className = `hero theme-${destaque ? tema(destaque) : 0}`;
+                $("heroInformacoes").hidden = !destaque;
+                $("heroClassificacao").hidden = !destaque;
+                $("heroMeta").hidden = !destaque;
+                $("heroPrincipal").replaceChildren(
+                    icone(destaque ? "edit" : "plus"),
+                    document.createTextNode(destaque ? "Editar programa" : "Cadastrar programa"),
+                );
+                $("heroTitulo").textContent = destaque ? destaque.nome : "Sua próxima descoberta.";
+                $("heroTipo").textContent = destaque
+                    ? destaque.categoria || "PROGRAMA"
+                    : "CATÁLOGO";
+                $("heroMonograma").textContent = destaque ? iniciais(destaque.nome) : "N";
+                $("heroDestaque").textContent = destaque
+                    ? "Em destaque no seu catálogo"
+                    : "Todos os seus programas em um só lugar";
+                $("heroDescricao").textContent = destaque
+                    ? `Conheça ${destaque.nome}. Confira as informações deste programa e organize sua programação em um só lugar.`
+                    : "Explore seu catálogo, descubra os programas por categoria e mantenha sua programação sempre organizada.";
+                $("heroCategoria").textContent = destaque ? destaque.categoria || "Programa" : "";
+                $("heroEmissora").textContent = destaque
+                    ? destaque.emissora || "Emissora não informada"
+                    : "";
+                $("heroClassificacao").textContent = destaque ? classificacao(destaque) : "";
+            }
+
+            function criarBanner(programa) {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                botao.className = `program-card theme-${tema(programa)}`;
+                botao.setAttribute("aria-label", `Ver informações de ${programa.nome}`);
+                // Dados da API são inseridos como texto, nunca como HTML.
+                const marca = document.createElement("span");
+                marca.className = "card-brand";
+                marca.textContent = "N";
+                marca.setAttribute("aria-hidden", "true");
+                const mono = document.createElement("span");
+                mono.className = "card-monogram";
+                mono.textContent = iniciais(programa.nome);
+                mono.setAttribute("aria-hidden", "true");
+                const conteudo = document.createElement("span");
+                conteudo.className = "card-content";
+                const categoria = document.createElement("span");
+                categoria.className = "card-category";
+                categoria.textContent = programa.categoria || "Programa";
+                const titulo = document.createElement("span");
+                titulo.className = "card-title";
+                titulo.textContent = programa.nome;
+                const emissora = document.createElement("span");
+                emissora.className = "card-channel";
+                emissora.textContent = programa.emissora || "Emissora não informada";
+                const rodape = document.createElement("span");
+                rodape.className = "card-footer";
+                const idade = document.createElement("span");
+                idade.className = "age-badge";
+                idade.textContent = classificacao(programa);
+                const info = document.createElement("span");
+                info.className = "card-info";
+                info.append(icone("info"));
+                rodape.append(idade, info);
+                conteudo.append(categoria, titulo, emissora, rodape);
+                botao.append(marca, mono, conteudo);
+                botao.addEventListener("click", () => abrirDetalhes(programa));
+                return botao;
+            }
+
+            function criarFileira(titulo, lista) {
+                const secao = document.createElement("section");
+                secao.className = "program-row";
+                const cabecalho = document.createElement("div");
+                cabecalho.className = "row-heading";
+                const h3 = document.createElement("h3");
+                h3.textContent = titulo;
+                const controle = document.createElement("div");
+                controle.className = "row-controls";
+                const contagem = document.createElement("span");
+                contagem.textContent = `${lista.length} ${lista.length === 1 ? "programa" : "programas"}`;
+                controle.append(contagem);
+                const trilho = document.createElement("div");
+                trilho.className = "card-track";
+                lista.forEach((programa) => trilho.append(criarBanner(programa)));
+                ["anterior", "próximo"].forEach((direcao, indice) => {
+                    const seta = document.createElement("button");
+                    seta.type = "button";
+                    seta.className = `row-arrow ${indice === 0 ? "previous" : ""}`;
+                    seta.setAttribute(
+                        "aria-label",
+                        `Mostrar ${direcao === "anterior" ? "programas anteriores" : "próximos programas"} em ${titulo}`,
+                    );
+                    seta.append(icone("chevron"));
+                    seta.addEventListener("click", () =>
+                        trilho.scrollBy({
+                            left: trilho.clientWidth * (indice === 0 ? -0.8 : 0.8),
+                            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+                                ? "instant"
+                                : "smooth",
+                        }),
+                    );
+                    controle.append(seta);
+                });
+                cabecalho.append(h3, controle);
+                secao.append(cabecalho, trilho);
+                return secao;
+            }
+
+            function atualizarFiltros() {
+                $("filtros").replaceChildren();
+                const extras = [
+                    ...new Set(programas.map((p) => p.categoria).filter(Boolean)),
+                ].filter((categoria) => !categorias.includes(categoria));
+                ["", ...categorias, ...extras].forEach((categoria) => {
+                    const botao = document.createElement("button");
+                    botao.type = "button";
+                    botao.className = `filter-chip${categoria === categoriaAtiva ? " selected" : ""}`;
+                    botao.textContent = categoria || "Todos";
+                    botao.setAttribute("aria-pressed", categoria === categoriaAtiva);
+                    botao.addEventListener("click", () => filtrarCategoria(categoria));
+                    $("filtros").append(botao);
+                });
+                document.querySelectorAll("[data-filtro]").forEach((botao) => {
+                    const ativo = botao.dataset.filtro === categoriaAtiva;
+                    botao.classList.toggle("active", ativo);
+                    botao.setAttribute("aria-pressed", ativo);
+                });
+            }
+
+            function mostrarEstado(titulo, mensagem, acao, textoAcao) {
+                const estado = $("estadoCatalogo");
+                estado.replaceChildren();
+                const h3 = document.createElement("h3");
+                h3.textContent = titulo;
+                const p = document.createElement("p");
+                p.textContent = mensagem;
+                estado.append(h3, p);
+                if (acao) {
+                    const botao = document.createElement("button");
+                    botao.className = "button button-red";
+                    botao.type = "button";
+                    botao.textContent = textoAcao;
+                    botao.addEventListener("click", acao);
+                    estado.append(botao);
+                }
+                estado.hidden = false;
+            }
+
+            function renderizarCatalogo() {
+                const lista = programas.filter(
+                    (p) => !categoriaAtiva || p.categoria === categoriaAtiva,
+                );
+                $("fileiras").replaceChildren();
+                $("catalogoTitulo").textContent = consultaAtiva
+                    ? `Resultados para “${consultaAtiva}”`
+                    : categoriaAtiva || "Seus programas";
+                $("contador").textContent =
+                    `${lista.length} ${lista.length === 1 ? "programa disponível" : "programas disponíveis"}`;
+                $("limparBusca").hidden = !consultaAtiva && !$("buscarNome").value;
+                atualizarFiltros();
+                atualizarDestaque(lista);
+                $("estadoCatalogo").hidden = lista.length > 0;
+                if (!lista.length) {
+                    const filtrado = Boolean(consultaAtiva || categoriaAtiva);
+                    mostrarEstado(
+                        filtrado ? "Nenhum programa encontrado" : "Seu catálogo começa aqui",
+                        filtrado
+                            ? "Tente outro nome ou selecione uma categoria diferente."
+                            : "Cadastre seu primeiro programa para vê-lo em destaque e nos banners.",
+                        filtrado ? limparFiltros : abrirModalCriar,
+                        filtrado ? "Mostrar todos" : "Cadastrar primeiro programa",
+                    );
+                    return;
+                }
+                $("fileiras").append(
+                    criarFileira(
+                        consultaAtiva ? "Resultados da busca" : categoriaAtiva || "Em destaque",
+                        lista,
+                    ),
+                );
+                if (!categoriaAtiva && !consultaAtiva) {
+                    const grupos = [
+                        ...new Set(lista.map((p) => p.categoria || "Outros programas")),
+                    ];
+                    grupos.forEach((categoria) =>
+                        $("fileiras").append(
+                            criarFileira(
+                                categoria,
+                                lista.filter(
+                                    (p) => (p.categoria || "Outros programas") === categoria,
+                                ),
+                            ),
+                        ),
+                    );
+                }
+            }
+
+            function filtrarCategoria(categoria) {
+                categoriaAtiva = categoria;
+                if (carregado) renderizarCatalogo();
+                else atualizarFiltros();
+            }
+
+            async function carregarProgramas(nome = "") {
+                if (consultaController) consultaController.abort();
+                const controller = new AbortController();
+                consultaController = controller;
+                consultaAtiva = nome;
+                $("catalogo").setAttribute("aria-busy", "true");
+                $("fileiras").replaceChildren();
+                mostrarEstado("Carregando seus programas", "Aguarde um instante.");
+                $("contador").textContent = "Carregando catálogo…";
+                try {
+                    const resposta = await fetch(
+                        nome ? `${api}?nome=${encodeURIComponent(nome)}` : api,
+                        { signal: controller.signal },
+                    );
+                    if (!resposta.ok) throw new Error("Falha ao carregar o catálogo.");
+                    const dados = await resposta.json();
+                    if (!Array.isArray(dados))
+                        throw new Error("O servidor não retornou uma lista de programas.");
+                    programas = dados.filter((p) => p && typeof p === "object");
+                    carregado = true;
+                    renderizarCatalogo();
+                } catch (erro) {
+                    if (erro.name === "AbortError") return;
+                    carregado = false;
+                    $("contador").textContent = "Catálogo indisponível";
+                    mostrarEstado(
+                        "Não foi possível carregar o catálogo",
+                        "Verifique se a aplicação está em execução e tente novamente.",
+                        () => carregarProgramas(consultaAtiva),
+                        "Tentar novamente",
+                    );
+                    mostrarToast("Não foi possível conectar ao catálogo de programas.", "erro");
+                } finally {
+                    if (consultaController === controller)
+                        $("catalogo").setAttribute("aria-busy", "false");
+                }
+            }
+
+            function limparFiltros() {
+                categoriaAtiva = "";
+                $("buscarNome").value = "";
+                atualizarFiltros();
+                return carregarProgramas();
+            }
+
+            async function salvarPrograma(evento) {
+                evento.preventDefault();
+                if (gravando || !$("formPrograma").reportValidity()) return;
+                const nome = $("programaNome").value.trim();
+                const emissora = $("programaEmissora").value.trim();
+                if (!nome || !emissora) {
+                    mostrarToast("Preencha o nome e a emissora com um texto válido.", "erro");
+                    return;
+                }
+                const id = $("programaId").value;
+                gravando = true;
+                $("btnSalvar").disabled = true;
+                $("btnExcluir").disabled = true;
+                const textoBotao = $("btnSalvar").textContent;
+                $("btnSalvar").textContent = "Salvando…";
+                try {
+                    const resposta = await fetch(id ? `${api}?id=${encodeURIComponent(id)}` : api, {
+                        method: id ? "PUT" : "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            nome,
+                            categoria: $("programaCategoria").value,
+                            emissora,
+                            class_indic: $("programaClassificacao").value,
+                        }),
+                    });
+                    if (!resposta.ok) throw new Error("Falha ao salvar o programa.");
+                    gravando = false;
+                    fecharModal("modalFormulario");
+                    mostrarToast(
+                        id
+                            ? "Programa atualizado com sucesso."
+                            : "Programa cadastrado com sucesso.",
+                    );
+                    await limparFiltros();
+                } catch (erro) {
+                    mostrarToast(
+                        "Não foi possível salvar. Confira a conexão e tente novamente.",
+                        "erro",
+                    );
+                } finally {
+                    gravando = false;
+                    $("btnSalvar").disabled = false;
+                    $("btnExcluir").disabled = false;
+                    $("btnSalvar").textContent = textoBotao;
+                }
+            }
+
+            async function confirmarDelecao() {
+                if (!selecionado || gravando) return;
+                // A API original exclui por nome; usa o nome salvo, mesmo se o formulário foi alterado.
+                const nome = selecionado.nome;
+                gravando = true;
+                $("confirmarExclusao").disabled = true;
+                $("confirmarExclusao").textContent = "Excluindo…";
+                try {
+                    const resposta = await fetch(`${api}?nome=${encodeURIComponent(nome)}`, {
+                        method: "DELETE",
+                    });
+                    if (!resposta.ok) throw new Error("Falha ao excluir o programa.");
+                    gravando = false;
+                    fecharModal("modalExclusao");
+                    fecharModal("modalFormulario");
+                    mostrarToast(`“${nome}” foi removido do catálogo.`);
+                    await limparFiltros();
+                } catch (erro) {
+                    mostrarToast("Não foi possível excluir. Tente novamente.", "erro");
+                } finally {
+                    gravando = false;
+                    $("confirmarExclusao").disabled = false;
+                    $("confirmarExclusao").textContent = "Sim, excluir";
+                }
+            }
+
+            ["navCriar", "novoPrograma"].forEach((id) =>
+                $(id).addEventListener("click", abrirModalCriar),
+            );
+            $("heroPrincipal").addEventListener("click", () =>
+                destaque ? abrirModalEditar(destaque) : abrirModalCriar(),
+            );
+            $("heroInformacoes").addEventListener(
+                "click",
+                () => destaque && abrirDetalhes(destaque),
+            );
+            $("editarSelecionado").addEventListener(
+                "click",
+                () => selecionado && abrirModalEditar(selecionado),
+            );
+            $("formPrograma").addEventListener("submit", salvarPrograma);
+            $("btnExcluir").addEventListener("click", () => {
+                if (!selecionado || gravando) return;
+                $("modalNomePrograma").textContent = selecionado.nome;
+                abrirModal("modalExclusao");
+            });
+            $("confirmarExclusao").addEventListener("click", confirmarDelecao);
+            $("formBusca").addEventListener("submit", (evento) => {
+                evento.preventDefault();
+                carregarProgramas($("buscarNome").value.trim());
+            });
+            $("buscarNome").addEventListener("input", () => {
+                $("limparBusca").hidden = !$("buscarNome").value && !consultaAtiva;
+            });
+            $("limparBusca").addEventListener("click", limparFiltros);
+            $("navBusca").addEventListener("click", () => {
+                $("catalogo").scrollIntoView({ behavior: "auto" });
+                $("buscarNome").focus({ preventScroll: true });
+            });
+            $("navCatalogo").addEventListener("click", () => {
+                limparFiltros();
+                $("catalogo").scrollIntoView({ behavior: "auto" });
+            });
+            document
+                .querySelectorAll("[data-filtro]")
+                .forEach((botao) =>
+                    botao.addEventListener("click", () => filtrarCategoria(botao.dataset.filtro)),
+                );
+            atualizarFiltros();
+            carregarProgramas();
+        </script>
+    </body>
 </html>
