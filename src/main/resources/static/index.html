@@ -1,901 +1,188 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#141414" />
-    <meta name="description" content="Catálogo e gerenciamento de programas de televisão." />
-    <title>Programflix — Catálogo de programas</title>
-
-    <link rel="stylesheet" href="style.css" />
-    <script src="app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINTONIA - A programação nas suas mãos</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<!-- Biblioteca de ícones vetoriais -->
-<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-
-    <symbol id="icon-search" viewBox="0 0 24 24">
-        <circle cx="10.5" cy="10.5" r="6.5" />
-        <path d="m16 16 5 5" />
-    </symbol>
-
-    <symbol id="icon-home" viewBox="0 0 24 24">
-        <path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z" />
-    </symbol>
-
-    <symbol id="icon-tv" viewBox="0 0 24 24">
-        <rect x="3" y="4" width="18" height="13" rx="1" />
-        <path d="M7 21h10" />
-    </symbol>
-
-    <symbol id="icon-film" viewBox="0 0 24 24">
-        <path d="M3 9h18v12H3zM3 9V5l17-3 1 7M7 4l3 4m3-5 3 5" />
-    </symbol>
-
-    <symbol id="icon-grid" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-        <rect x="14" y="14" width="7" height="7" rx="1" />
-    </symbol>
-
-    <symbol id="icon-plus" viewBox="0 0 24 24">
-        <path d="M12 3v18M3 12h18" />
-    </symbol>
-
-    <symbol id="icon-info" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 11v6m0-11v1" />
-    </symbol>
-
-    <symbol id="icon-edit" viewBox="0 0 24 24">
-        <path d="m15 4 5 5M4 16 17 3l4 4L8 20l-5 1Z" />
-    </symbol>
-
-    <symbol id="icon-close" viewBox="0 0 24 24">
-        <path d="m6 6 12 12M6 18 18 6" />
-    </symbol>
-
-    <symbol id="icon-chevron" viewBox="0 0 24 24">
-        <path d="m9 4 8 8-8 8" />
-    </symbol>
-
-</svg>
-
-
-<a class="skip-link" href="#catalogo">
-    Ir para o catálogo
-</a>
-
-
-<!-- MENU LATERAL -->
-
-<aside class="sidebar" aria-label="Navegação principal">
-
-    <a class="brand-mark" href="#inicio" aria-label="Programflix — início">
-        N
-    </a>
-
-    <nav class="sidebar-nav">
-
-        <button
-                class="nav-button"
-                id="navBusca"
-                title="Buscar programas"
-                aria-label="Buscar programas"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-search" />
-            </svg>
-            <span>Buscar</span>
-        </button>
-
-
-        <button
-                class="nav-button active"
-                data-filtro=""
-                title="Início"
-                aria-label="Início"
-                aria-pressed="true"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-home" />
-            </svg>
-            <span>Início</span>
-        </button>
-
-
-        <button
-                class="nav-button"
-                data-filtro="Seriado"
-                title="Seriados"
-                aria-label="Seriados"
-                aria-pressed="false"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-tv" />
-            </svg>
-            <span>Seriados</span>
-        </button>
-
-
-        <button
-                class="nav-button"
-                data-filtro="Filme"
-                title="Filmes"
-                aria-label="Filmes"
-                aria-pressed="false"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-film" />
-            </svg>
-            <span>Filmes</span>
-        </button>
-
-
-        <button
-                class="nav-button"
-                id="navCatalogo"
-                title="Todos os programas"
-                aria-label="Todos os programas"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-grid" />
-            </svg>
-            <span>Catálogo</span>
-        </button>
-
-
-        <button
-                class="nav-button nav-add"
-                id="navCriar"
-                title="Cadastrar programa"
-                aria-label="Cadastrar programa"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-plus" />
-            </svg>
-            <span>Cadastrar</span>
-        </button>
-
-    </nav>
-
-    <span class="sidebar-caption" aria-hidden="true">
-            PROGRAMFLIX
-        </span>
-
-</aside>
-
-
-
-<!-- CONTEÚDO PRINCIPAL -->
-
-<main id="inicio">
-
-
-    <!-- BARRA SUPERIOR -->
-
-    <header class="topbar">
-
-        <a class="wordmark" href="#inicio">
-            PROGRAMFLIX
-        </a>
-
-        <span class="topbar-label">
-                Seu catálogo de programas
-            </span>
-
-        <button
-                class="button button-small button-outline"
-                id="novoPrograma"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-plus" />
-            </svg>
-
-            <span>Novo programa</span>
-        </button>
-
-    </header>
-
-
-
-    <!-- DESTAQUE PRINCIPAL -->
-
-    <section
-            class="hero theme-0"
-            id="hero"
-            aria-labelledby="heroTitulo"
-    >
-
-        <div class="hero-art" aria-hidden="true">
-
-                <span class="hero-monogram" id="heroMonograma">
-                    N
-                </span>
-
-            <span class="art-line art-line-one"></span>
-
-            <span class="art-line art-line-two"></span>
-
+<div class="app-container">
+    <!-- Menu Lateral -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h1>SINTONIA</h1>
+            <p>Gestão de TV</p>
         </div>
-
-
-        <div class="hero-content">
-
-            <p class="original-label">
-
-                    <span class="n-mark" aria-hidden="true">
-                        N
-                    </span>
-
-                <span id="heroTipo">
-                        CATÁLOGO
-                    </span>
-
-            </p>
-
-
-            <h1 id="heroTitulo">
-                Sua próxima<br />descoberta.
-            </h1>
-
-
-            <p class="hero-highlight">
-
-                    <span class="highlight-mark" aria-hidden="true">
-                        N
-                    </span>
-
-                <span id="heroDestaque">
-                        Todos os seus programas em um só lugar
-                    </span>
-
-            </p>
-
-
-            <p class="hero-description" id="heroDescricao">
-
-                Explore seu catálogo, descubra os programas por categoria
-                e mantenha sua programação sempre organizada.
-
-            </p>
-
-
-            <div class="hero-meta" id="heroMeta" hidden>
-
-                <span id="heroCategoria"></span>
-
-                <span class="meta-dot" aria-hidden="true">•</span>
-
-                <span id="heroEmissora"></span>
-
-            </div>
-
-
-            <div class="hero-actions">
-
-                <button
-                        class="button button-white"
-                        id="heroPrincipal"
-                        type="button"
-                >
-                    <svg class="icon">
-                        <use href="#icon-plus" />
-                    </svg>
-
-                    <span>Cadastrar programa</span>
-                </button>
-
-
-                <button
-                        class="button button-glass"
-                        id="heroInformacoes"
-                        type="button"
-                        hidden
-                >
-                    <svg class="icon">
-                        <use href="#icon-info" />
-                    </svg>
-
-                    Mais informações
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <span class="hero-age" id="heroClassificacao" hidden></span>
-
-        <span class="hero-watermark" aria-hidden="true">
-                PROGRAMFLIX
-            </span>
-
-    </section>
-
-
-
-    <!-- CATÁLOGO DE PROGRAMAS -->
-
-    <section
-            class="catalog"
-            id="catalogo"
-            aria-label="Catálogo de programas"
-            aria-busy="true"
-    >
-
-        <div class="catalog-toolbar">
-
-
-            <div class="catalog-heading">
-
-                <p class="eyebrow">
-                    EXPLORE O CATÁLOGO
-                </p>
-
-                <h2 id="catalogoTitulo">
-                    Seus programas
-                </h2>
-
-                <p id="contador" aria-live="polite">
-                    Carregando catálogo…
-                </p>
-
-            </div>
-
-
-
-            <!-- CAMPO DE BUSCA -->
-
-            <form
-                    class="search-form"
-                    id="formBusca"
-                    role="search"
-            >
-
-                <label class="sr-only" for="buscarNome">
-                    Buscar pelo nome do programa
-                </label>
-
-                <svg class="icon" aria-hidden="true">
-                    <use href="#icon-search" />
-                </svg>
-
-
-                <input
-                        type="search"
-                        id="buscarNome"
-                        placeholder="Títulos, programas…"
-                        autocomplete="off"
-                />
-
-
-                <button
-                        class="search-submit"
-                        type="submit"
-                >
-                    Buscar
-                </button>
-
-
-                <button
-                        class="search-clear"
-                        id="limparBusca"
-                        type="button"
-                        title="Limpar busca"
-                        aria-label="Limpar busca"
-                        hidden
-                >
-                    <svg class="icon">
-                        <use href="#icon-close" />
-                    </svg>
-                </button>
-
-            </form>
-
-        </div>
-
-
-
-        <!-- FILTROS DE CATEGORIA -->
-
-        <div
-                class="filter-bar"
-                id="filtros"
-                aria-label="Filtrar por categoria"
-        ></div>
-
-
-
-        <!-- ESTADO DE CARREGAMENTO / ERRO -->
-
-        <div
-                class="catalog-status"
-                id="estadoCatalogo"
-                role="status"
-        >
-
-            <span class="loading-ring" aria-hidden="true"></span>
-
-            <h3>Carregando seus programas</h3>
-
-            <p>Aguarde um instante.</p>
-
-        </div>
-
-
-
-        <!-- FILEIRAS DE CARDS GERADAS PELO JAVASCRIPT -->
-
-        <div id="fileiras"></div>
-
-    </section>
-
-
-
-    <!-- RODAPÉ -->
-
-    <footer class="footer">
-
-        <span>PROGRAMFLIX</span>
-
-        <p>Seu catálogo. Sua programação.</p>
-
-        <a href="#inicio">
-            Voltar ao início ↑
-        </a>
-
-    </footer>
-
-</main>
-
-
-
-<!-- ÁREA DE NOTIFICAÇÕES -->
-
-<div
-        id="toast-container"
-        aria-live="polite"
-        aria-atomic="false"
-></div>
-
-
-
-<!-- =====================================
-     MODAL DE DETALHES
-====================================== -->
-
-<dialog
-        class="modal modal-details"
-        id="modalDetalhes"
-        aria-labelledby="detalhesTitulo"
->
-
-    <button
-            class="close-button"
-            type="button"
-            data-fechar="modalDetalhes"
-            aria-label="Fechar detalhes"
-    >
-        <svg class="icon">
-            <use href="#icon-close" />
-        </svg>
-    </button>
-
-
-    <div class="details-banner theme-0" id="detalhesBanner">
-
-        <p class="original-label">
-
-            <span class="n-mark" aria-hidden="true">N</span>
-
-            PROGRAMA
-
-        </p>
-
-
-        <h2 id="detalhesTitulo"></h2>
-
-
-        <span
-                class="details-monogram"
-                id="detalhesMonograma"
-                aria-hidden="true"
-        ></span>
-
-    </div>
-
-
-    <div class="modal-content">
-
-        <p class="eyebrow">
-            SOBRE O PROGRAMA
-        </p>
-
-
-        <dl class="details-list">
-
-            <div>
-
-                <dt>Categoria</dt>
-
-                <dd id="detalhesCategoria"></dd>
-
-            </div>
-
-
-            <div>
-
-                <dt>Emissora / canal</dt>
-
-                <dd id="detalhesEmissora"></dd>
-
-            </div>
-
-
-            <div>
-
-                <dt>Classificação indicativa</dt>
-
-                <dd id="detalhesClassificacao"></dd>
-
-            </div>
-
-
-            <div>
-
-                <dt>Identificador</dt>
-
-                <dd id="detalhesId"></dd>
-
-            </div>
-
-        </dl>
-
-
-        <button
-                class="button button-red"
-                id="editarSelecionado"
-                type="button"
-        >
-            <svg class="icon">
-                <use href="#icon-edit" />
-            </svg>
-
-            Editar programa
-        </button>
-
-    </div>
-
-</dialog>
-
-
-
-<!-- =====================================
-     MODAL DE CADASTRO E EDIÇÃO
-====================================== -->
-
-<dialog
-        class="modal modal-form"
-        id="modalFormulario"
-        aria-labelledby="formTitulo"
->
-
-    <button
-            class="close-button"
-            type="button"
-            data-fechar="modalFormulario"
-            aria-label="Fechar formulário"
-    >
-        <svg class="icon">
-            <use href="#icon-close" />
-        </svg>
-    </button>
-
-
-    <div class="modal-content">
-
-        <p class="eyebrow">
-            SEU CATÁLOGO
-        </p>
-
-
-        <h2 id="formTitulo">
-            Novo programa
-        </h2>
-
-
-        <p class="form-description" id="formDescricao">
-
-            Preencha os dados para adicionar um programa ao catálogo.
-
-        </p>
-
-
-
-        <form id="formPrograma">
-
-
-            <!-- ID UTILIZADO NA EDIÇÃO -->
-
-            <input
-                    type="hidden"
-                    id="programaId"
-            />
-
-
-
-            <!-- NOME -->
-
-            <label for="programaNome">
-                Nome do programa
-            </label>
-
-            <input
-                    id="programaNome"
-                    name="nome"
-                    type="text"
-                    maxlength="25"
-                    placeholder="Ex.: Stranger Things"
-                    required
-            />
-
-
-
-            <div class="form-grid">
-
-
-                <!-- CATEGORIA -->
-
-                <div>
-
-                    <label for="programaCategoria">
-                        Categoria
-                    </label>
-
-                    <select
-                            id="programaCategoria"
-                            name="categoria"
-                            required
-                    >
-
-                        <option value="" disabled selected>
-                            Selecione
-                        </option>
-
-                        <option value="Desenho">
-                            Desenho
-                        </option>
-
-                        <option value="Seriado">
-                            Seriado
-                        </option>
-
-                        <option value="Filme">
-                            Filme
-                        </option>
-
-                        <option value="Jornal">
-                            Jornal
-                        </option>
-
-                        <option value="Novela">
-                            Novela
-                        </option>
-
-                        <option value="Programa de auditório">
-                            Programa de auditório
-                        </option>
-
-                        <option value="Esporte">
-                            Esporte
-                        </option>
-
-                        <option value="Reality show">
-                            Reality show
-                        </option>
-
-                    </select>
-
+        <nav>
+            <button class="nav-btn active" id="navHome">Início</button>
+            <button class="nav-btn" id="navNovo">Novo Programa</button>
+        </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <header class="header">
+            <h2>A programação nas suas mãos.</h2>
+            <div class="dashboard-counters">
+                <div class="counter">
+                    <span class="counter-value" id="countProgramas">0</span>
+                    <span class="counter-label">Programas</span>
                 </div>
-
-
-
-                <!-- CLASSIFICAÇÃO INDICATIVA -->
-
-                <div>
-
-                    <label for="programaClassificacao">
-                        Classificação
-                    </label>
-
-                    <select
-                            id="programaClassificacao"
-                            name="class_indic"
-                            required
-                    >
-
-                        <option value="" disabled selected>
-                            Selecione
-                        </option>
-
-                        <option value="Livre">
-                            Livre
-                        </option>
-
-                        <option value="10 anos">
-                            10 anos
-                        </option>
-
-                        <option value="12 anos">
-                            12 anos
-                        </option>
-
-                        <option value="14 anos">
-                            14 anos
-                        </option>
-
-                        <option value="16 anos">
-                            16 anos
-                        </option>
-
-                        <option value="18 anos">
-                            18 anos
-                        </option>
-
-                    </select>
-
+                <div class="counter">
+                    <span class="counter-value" id="countEmissoras">0</span>
+                    <span class="counter-label">Emissoras</span>
                 </div>
+                <div class="counter">
+                    <span class="counter-value" id="countCategorias">0</span>
+                    <span class="counter-label">Categorias</span>
+                </div>
+            </div>
+            <button class="btn-primary" id="btnNovoProgramaHeader">Novo programa</button>
+        </header>
 
+        <!-- Barra de Ferramentas -->
+        <section class="toolbar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar por nome ou ID..." aria-label="Buscar programa">
+                <button class="btn-icon" id="btnClearSearch" aria-label="Limpar busca">&times;</button>
+            </div>
+            <div class="filters">
+                <select id="filterCategoria" aria-label="Filtrar por categoria">
+                    <option value="">Todas as Categorias</option>
+                </select>
+                <select id="sortList" aria-label="Ordenar programas">
+                    <option value="nome_asc">Nome (A-Z)</option>
+                    <option value="nome_desc">Nome (Z-A)</option>
+                    <option value="id_asc">ID (Crescente)</option>
+                    <option value="id_desc">ID (Decrescente)</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Status de Carregamento e Mensagens -->
+        <div id="statusMessage" class="status-message hidden"></div>
+
+        <!-- Grade de Programas -->
+        <section class="program-grid" id="programGrid">
+            <!-- Cartões injetados via JS -->
+        </section>
+    </main>
+</div>
+
+<!-- Modal de Formulário (Cadastro/Edição) -->
+<div class="modal hidden" id="formModal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+    <div class="modal-content">
+        <header class="modal-header">
+            <h3 id="modalTitle">Novo Programa</h3>
+            <button class="btn-close" aria-label="Fechar modal">&times;</button>
+        </header>
+        <form id="programaForm">
+            <input type="hidden" id="programaId">
+
+            <div class="form-group">
+                <label for="nome">Nome do Programa <span class="required">*</span></label>
+                <input type="text" id="nome" name="nome" maxlength="25" placeholder="Ex: Jornal Nacional" required>
             </div>
 
-
-
-            <!-- EMISSORA -->
-
-            <label for="programaEmissora">
-                Emissora / canal
-            </label>
-
-            <input
-                    id="programaEmissora"
-                    name="emissora"
-                    type="text"
-                    maxlength="25"
-                    placeholder="Ex.: Netflix, Globo, HBO…"
-                    required
-            />
-
-
-
-            <!-- INFORMAÇÃO -->
-
-            <p class="form-note">
-
-                O banner é criado automaticamente a partir do título e da categoria.
-                Os campos de texto aceitam até 25 caracteres.
-
-            </p>
-
-
-
-            <!-- BOTÕES DO FORMULÁRIO -->
-
-            <div class="form-actions">
-
-
-                <button
-                        class="button button-red"
-                        id="btnSalvar"
-                        type="submit"
-                >
-                    Cadastrar programa
-                </button>
-
-
-                <button
-                        class="button button-outline"
-                        type="button"
-                        data-fechar="modalFormulario"
-                >
-                    Cancelar
-                </button>
-
+            <div class="form-group">
+                <label for="categoria">Categoria <span class="required">*</span></label>
+                <select id="categoria" name="categoria" required>
+                    <option value="" disabled selected>Selecione uma categoria...</option>
+                    <option value="Anime">Anime</option>
+                    <option value="Auditório">Auditório</option>
+                    <option value="Ciência e Tecnologia">Ciência e Tecnologia</option>
+                    <option value="Culinária / Gastronomia">Culinária / Gastronomia</option>
+                    <option value="Debate">Debate</option>
+                    <option value="Desenho Animado">Desenho Animado</option>
+                    <option value="Documentário">Documentário</option>
+                    <option value="Educativo">Educativo</option>
+                    <option value="Entretenimento">Entretenimento</option>
+                    <option value="Entrevista / Talk Show">Entrevista / Talk Show</option>
+                    <option value="Esporte">Esporte</option>
+                    <option value="Filme">Filme</option>
+                    <option value="Game Show">Game Show</option>
+                    <option value="Humor / Comédia">Humor / Comédia</option>
+                    <option value="Infantil">Infantil</option>
+                    <option value="Jornalismo">Jornalismo</option>
+                    <option value="Minissérie">Minissérie</option>
+                    <option value="Musical">Musical</option>
+                    <option value="Novela">Novela</option>
+                    <option value="Policial">Policial</option>
+                    <option value="Reality Show">Reality Show</option>
+                    <option value="Religioso">Religioso</option>
+                    <option value="Rural / Agronegócio">Rural / Agronegócio</option>
+                    <option value="Série">Série</option>
+                    <option value="Televendas">Televendas</option>
+                    <option value="Turismo / Viagem">Turismo / Viagem</option>
+                    <option value="Variedades">Variedades</option>
+                    <option value="Outros">Outros</option>
+                </select>
             </div>
 
+            <div class="form-group">
+                <label for="emissora">Emissora <span class="required">*</span></label>
+                <input type="text" id="emissora" name="emissora" maxlength="25" placeholder="Ex: Globo" required>
+            </div>
 
+            <div class="form-group">
+                <label for="class_indic">Classificação Indicativa <span class="required">*</span></label>
+                <select id="class_indic" name="class_indic" required>
+                    <option value="" disabled selected>Selecione a classificação...</option>
+                    <option value="Livre">Livre</option>
+                    <option value="10 anos">10 anos</option>
+                    <option value="12 anos">12 anos</option>
+                    <option value="14 anos">14 anos</option>
+                    <option value="16 anos">16 anos</option>
+                    <option value="18 anos">18 anos</option>
+                </select>
+            </div>
 
-            <!-- BOTÃO DE EXCLUSÃO -->
-
-            <button
-                    class="delete-link"
-                    id="btnExcluir"
-                    type="button"
-                    hidden
-            >
-                Excluir este programa
-            </button>
-
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary btn-cancelar">Cancelar</button>
+                <button type="submit" class="btn-primary" id="btnSalvar">Salvar</button>
+            </div>
+            <div id="formError" class="form-error hidden"></div>
         </form>
-
     </div>
+</div>
 
-</dialog>
-
-
-
-<!-- =====================================
-     MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
-====================================== -->
-
-<dialog
-        class="modal modal-delete"
-        id="modalExclusao"
-        aria-labelledby="exclusaoTitulo"
->
-
+<!-- Modal de Detalhes -->
+<div class="modal hidden" id="detailsModal" role="dialog" aria-modal="true">
     <div class="modal-content">
-
-            <span class="delete-symbol" aria-hidden="true">
-                !
-            </span>
-
-
-        <h2 id="exclusaoTitulo">
-            Excluir programa?
-        </h2>
-
-
-        <p>
-
-            O programa
-
-            <strong id="modalNomePrograma"></strong>
-
-            será removido do catálogo.
-            Esta ação não pode ser desfeita.
-
-        </p>
-
-
-        <div class="form-actions">
-
-
-            <button
-                    class="button button-outline"
-                    data-fechar="modalExclusao"
-                    type="button"
-                    autofocus
-            >
-                Cancelar
-            </button>
-
-
-            <button
-                    class="button button-red"
-                    id="confirmarExclusao"
-                    type="button"
-            >
-                Sim, excluir
-            </button>
-
+        <header class="modal-header">
+            <h3>Detalhes do Programa</h3>
+            <button class="btn-close" aria-label="Fechar modal">&times;</button>
+        </header>
+        <div class="details-body" id="detailsBody">
+            <!-- Preenchido via JS -->
         </div>
-
+        <div class="modal-actions">
+            <button type="button" class="btn-danger" id="btnDeleteDetail">Excluir</button>
+            <button type="button" class="btn-primary" id="btnEditDetail">Editar</button>
+        </div>
     </div>
+</div>
 
-</dialog>
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal hidden" id="deleteModal" role="dialog" aria-modal="true">
+    <div class="modal-content modal-small">
+        <header class="modal-header">
+            <h3>Confirmar Exclusão</h3>
+        </header>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o programa <strong id="deleteProgramName"></strong>?</p>
+            <p class="text-danger">Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary btn-cancel-delete">Cancelar</button>
+            <button type="button" class="btn-danger" id="btnConfirmDelete">Sim, Excluir</button>
+        </div>
+        <div id="deleteError" class="form-error hidden"></div>
+    </div>
+</div>
 
-
+<script src="api.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
